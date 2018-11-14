@@ -9,4 +9,5 @@ A realtime digital clock
 
 ## Extra Credit
 - Add a button on the clock to illuminate it, using css transitions for animation
+- Add an alarm that can be set by the user
 - Implement an analog clock
