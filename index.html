@@ -3,21 +3,42 @@
   <head>
     <meta charset="utf-8">
     <title>JS Clock</title>
-    <!-- Link the css file -->
-    <!-- Link the js file -->
+    <link rel="stylesheet" href="main.css">
   </head>
   <body>
 
 
-    <h1>JS Clock</h1>
-
-    <p id="cssTest">This text will disappear once the CSS file is successfully linked</p>
-
     <div id="clock">
-      <!-- Structure HTML elements of your clock here -->
-
+      <div id="body">
+        <div id="border">
+          <div id="screen">
+            <div id="time">
+              <div id="primaryInfo">
+                <span id="hour"></span><span id="colon">:</span><span id="minute"></span>
+              </div>
+              <div id="extraInfo">
+                <span id="meridiem"></span>
+                <span id="second"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="stand"></div>
     </div>
 
+    <div id="alarm">
+      <span>Alarm Time</span>
+      <input id="alarmHour" placeholder="Hours"></input>
+      <input id="alarmMinute" placeholder="Minutes"></input>
+      <select id="alarmMeridiem">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+      <button id="setAlarmButton" onClick="setAlarm()">Set Alarm</button>
+    </div>
+
+    <script src="script.js"></script>
 
   </body>
 </html>
