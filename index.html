@@ -10,16 +10,25 @@
 
     <div id="clock">
       <div id="body">
+        <button id="snoozeButton" onClick="lightUp(2.5)">Snooze/Light</button>
+        <button id="setAlarmButton" onClick="setAlarm()">
+          <div><img src="https://png.pngtree.com/svg/20160707/_alarm_icon_55952.png"/></div>
+        </button>
         <div id="border">
           <div id="screen">
             <div id="time">
               <div id="primaryInfo">
-                <span id="hour"></span><span id="colon">:</span><span id="minute"></span>
+                <span id="hour"></span><span id="timeColon">:</span><span id="minute"></span>
               </div>
               <div id="extraInfo">
                 <span id="meridiem"></span>
                 <span id="second"></span>
               </div>
+            </div>
+            <img id="alarmIndicator" src="https://mbtskoudsalg.com/images/youtube-bell-png.png"/>
+            <div id="dateAndAlarm">
+              <span id="alarmTime">12<span id="alarmColon">:</span>00 PM</span>
+              <span id="day"></span>
             </div>
           </div>
         </div>
@@ -34,7 +43,6 @@
         <option value="AM">AM</option>
         <option value="PM">PM</option>
       </select>
-      <button id="setAlarmButton" onClick="setAlarm()">Set Alarm</button>
     </div>
 
     <script src="script.js"></script>
