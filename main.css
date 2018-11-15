@@ -1,3 +1,7 @@
+* {
+  color: rgba(0,0,0,0.8);
+}
+
 #clock {
   display: flex;
   flex-direction: column;
@@ -27,7 +31,7 @@
 
 
 #border {
-  background: #ddd;
+  background: #dddfdb;
   border-radius: 25px;
   padding: 25px;
   border: 3px solid #888;
@@ -36,6 +40,7 @@
 
 #screen {
   background: #aaba95;
+  /* background: #2f5aff; */
   border: 5px solid #aaa;
   border-style: inset;
   border-radius: 5px;
@@ -68,9 +73,17 @@
 }
 
 #meridiem {
-  font-size: 30px;
+  font-size: 35px;
 }
 
 #second {
   font-size: 60px;
+}
+
+
+
+
+#alarm {
+  margin-top: 50px;
+  text-align: center;
 }

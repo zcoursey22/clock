@@ -31,8 +31,6 @@ function formatMeridiem(date) {
   return date.getHours() > 11 ? 'PM' : 'AM';
 }
 
-// TODO: setting the alarm to the current time will trigger alarm
-// TODO: user can set an invalid alarm
 function setAlarm() {
   alarm.hour = document.querySelector("#alarmHour").value;
   alarm.minute = document.querySelector("#alarmMinute").value;

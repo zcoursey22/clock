@@ -10,3 +10,12 @@ A realtime digital clock
 ## Extra Credit
 - Add a button on the clock to illuminate it, using css transitions for animation
 - Implement an analog clock
+
+## TODO
+- Stop invalid alarm
+- Stop alarm being set to current time from triggering alarm
+- Light up button
+- Make alarm sound
+- Snoozing and dismissing
+- Alarm button
+- Alarm display
