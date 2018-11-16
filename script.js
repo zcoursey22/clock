@@ -2,7 +2,8 @@ let lightTimeout;
 let alarm = {
   hour: null,
   minute: null,
-  meridiem: null
+  meridiem: null,
+  valid: true
 };
 let second = new Date().getSeconds();
 
@@ -16,6 +17,9 @@ function setTime() {
   newSecond = date.getSeconds();
   toggleColon(newSecond);
   second = newSecond;
+  if (!alarm.valid && (alarm.hour !== formatHour(date) || alarm.minute !== formatMinute(date) || alarm.meridiem !== formatMeridiem(date))) {
+    alarm.valid = true;
+  }
   checkAlarm(date);
 }
 
@@ -63,13 +67,19 @@ function formatDate(date) {
 }
 
 function lightUp(duration) {
-  const snoozeButtonClick = new Audio('snoozeButtonClick.mp3');
-  snoozeButtonClick.volume = 0.25;
+  const snoozeButtonClick = new Audio('alarmButtonClick.mp3');
+  snoozeButtonClick.volume = 0.15;
   snoozeButtonClick.play();
   clearTimeout(lightTimeout);
   document.querySelector("#screen").style.backgroundColor = '#2f5aff';
+  document.querySelector("#screen").style.borderColor = '#8499df';
+  document.querySelector("#screen").style.boxShadow = '0 0 200px 50px rgba(47,90,255,0.5)';
+  document.querySelector("#screen").style.zIndex = 10;
   lightTimeout = setTimeout(() => {
     document.querySelector("#screen").style.backgroundColor = '#aaba95';
+    document.querySelector("#screen").style.borderColor = '#aaa';
+    document.querySelector("#screen").style.boxShadow = 'inset 0 2px 10px 2px rgba(0,0,0,0.5)';
+    document.querySelector("#screen").style.zIndex = 0;
   }, duration * 1000);
 }
 
@@ -77,15 +87,31 @@ function setAlarm() {
   const alarmButtonClick = new Audio('alarmButtonClick.mp3');
   alarmButtonClick.volume = 0.25;
   alarmButtonClick.play();
-  alarm.hour = document.querySelector("#alarmHour").value;
-  alarm.minute = document.querySelector("#alarmMinute").value;
-  alarm.meridiem = document.querySelector("#alarmMeridiem").value;
-  document.querySelector("#alarmTime").innerHTML = `${alarm.hour}<span id="alarmColon">:</span>${alarm.minute} ${alarm.meridiem}`;
-  document.querySelector("#alarmIndicator").style.display = 'block';
+  if (alarm.minute !== null) {
+    alarm = {
+      hour: null,
+      minute: null,
+      meridiem: null,
+      valid: true
+    }
+    document.querySelector("#alarmIndicator").style.display = 'none';
+  } else {
+    alarm.hour = document.querySelector("#alarmHour").value;
+    alarm.minute = document.querySelector("#alarmMinute").value;
+    alarm.meridiem = document.querySelector("#alarmMeridiem").value;
+    document.querySelector("#alarmTime").innerHTML = `${alarm.hour}<span id="alarmColon">:</span>${alarm.minute} ${alarm.meridiem}`;
+    document.querySelector("#alarmIndicator").style.display = 'block';
+    const date = new Date();
+    if (alarm.hour === formatHour(date) && alarm.minute === formatMinute(date) & alarm.meridiem === formatMeridiem(date)) {
+      alarm.valid = false;
+    } else {
+      alarm.valid = true;
+    }
+  }
 }
 
 function checkAlarm(date) {
-  if (alarm.hour === formatHour(date) && alarm.minute === formatMinute(date) && alarm.meridiem === formatMeridiem(date)) {
+  if (alarm.valid && alarm.hour === formatHour(date) && alarm.minute === formatMinute(date) && alarm.meridiem === formatMeridiem(date)) {
     const alarmSound = new Audio('alarm.mp3');
     alarmSound.volume = 0.5;
     alarmSound.play();
@@ -93,7 +119,8 @@ function checkAlarm(date) {
     alarm = {
       hour: null,
       minute: null,
-      meridiem: null
+      meridiem: null,
+      valid: true
     }
   }
 }
@@ -110,6 +137,22 @@ function toggleColon(newSecond) {
   }
 }
 
+function toggleLight() {
+  const snoozeButtonClick = new Audio('lightSwitchSound.mp3');
+  snoozeButtonClick.volume = 0.2;
+  snoozeButtonClick.play();
+  if (document.querySelector("#darkness").style.opacity === '0') {
+    document.querySelector("#darkness").style.opacity = 0.8;
+    document.querySelector("#panel").style.transform = 'scaleY(0.97) translateY(-3px)';
+    document.querySelector("#panel").style.background = 'linear-gradient(to top, white, #ddd 20%, white 30%, #ddd 31%, white 60%)';
+  } else {
+    document.querySelector("#darkness").style.opacity = 0;
+    document.querySelector("#panel").style.transform = 'scaleY(0.97) translateY(3px)';
+    document.querySelector("#panel").style.background = 'linear-gradient(to bottom, white, #ddd 20%, white 30%, #ddd 31%, white 60%)';
+  }
+}
 
+
+document.querySelector("#darkness").style.opacity = 0;
 setTime();
 window.setInterval(setTime, 100);
