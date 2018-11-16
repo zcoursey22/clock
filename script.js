@@ -1,4 +1,6 @@
 let lightTimeout;
+let alarmRinging = false;
+let snoozing = false;
 let alarm = {
   hour: null,
   minute: null,
@@ -6,6 +8,7 @@ let alarm = {
   valid: true
 };
 let second = new Date().getSeconds();
+const alarmSound = new Audio('alarm.mp3');
 
 function setTime() {
   const date = new Date();
@@ -54,7 +57,7 @@ function formatDate(date) {
   }
 
   function formatMonth(date) {
-    return date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
+    return date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
   }
 
   function formatDay(date) {
@@ -66,7 +69,7 @@ function formatDate(date) {
   return `${weekDay} ${monthDay}`;
 }
 
-function lightUp(duration) {
+function lightUp(duration, causedByAlarm) {
   const snoozeButtonClick = new Audio('alarmButtonClick.mp3');
   snoozeButtonClick.volume = 0.15;
   snoozeButtonClick.play();
@@ -81,6 +84,34 @@ function lightUp(duration) {
     document.querySelector("#screen").style.boxShadow = 'inset 0 2px 10px 2px rgba(0,0,0,0.5)';
     document.querySelector("#screen").style.zIndex = 0;
   }, duration * 1000);
+  if (alarmRinging && !causedByAlarm || snoozing) {
+    snoozing = true;
+    alarm.minute = Number(alarm.minute) + 5;
+    if (alarm.minute > 59) {
+      alarm.hour = Number(alarm.hour) + 1;
+      alarm.minute = alarm.minute - 60;
+      if (alarm.hour > 12) {
+        alarm.hour = alarm.hour - 12;
+        if (alarm.meridiem === 'AM') {
+          alarm.meridiem = 'PM';
+        } else {
+          alarm.meridiem = 'AM';
+        }
+      }
+    }
+    alarm.hour = alarm.hour < 10 ? '0' + alarm.hour : alarm.hour.toString();
+    alarm.minute = alarm.minute < 10 ? '0' + alarm.minute : alarm.minute.toString();
+    clearTimeout(lightTimeout);
+    setTimeout(() => {
+      document.querySelector("#screen").style.backgroundColor = '#aaba95';
+      document.querySelector("#screen").style.borderColor = '#aaa';
+      document.querySelector("#screen").style.boxShadow = 'inset 0 2px 10px 2px rgba(0,0,0,0.5)';
+      document.querySelector("#screen").style.zIndex = 0;
+    }, 2500);
+    alarmRinging = false;
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+  }
 }
 
 function setAlarm() {
@@ -94,7 +125,17 @@ function setAlarm() {
       meridiem: null,
       valid: true
     }
+    alarmRinging = false;
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
     document.querySelector("#alarmIndicator").style.display = 'none';
+    clearTimeout(lightTimeout);
+    setTimeout(() => {
+      document.querySelector("#screen").style.backgroundColor = '#aaba95';
+      document.querySelector("#screen").style.borderColor = '#aaa';
+      document.querySelector("#screen").style.boxShadow = 'inset 0 2px 10px 2px rgba(0,0,0,0.5)';
+      document.querySelector("#screen").style.zIndex = 0;
+    }, 2500);
   } else {
     alarm.hour = document.querySelector("#alarmHour").value;
     alarm.minute = document.querySelector("#alarmMinute").value;
@@ -111,17 +152,12 @@ function setAlarm() {
 }
 
 function checkAlarm(date) {
-  if (alarm.valid && alarm.hour === formatHour(date) && alarm.minute === formatMinute(date) && alarm.meridiem === formatMeridiem(date)) {
-    const alarmSound = new Audio('alarm.mp3');
+  if (!alarmRinging && alarm.valid && alarm.hour === formatHour(date) && alarm.minute === formatMinute(date) && alarm.meridiem === formatMeridiem(date)) {
     alarmSound.volume = 0.5;
+    alarmSound.loop
     alarmSound.play();
-    lightUp(12.5);
-    alarm = {
-      hour: null,
-      minute: null,
-      meridiem: null,
-      valid: true
-    }
+    lightUp(12.5, true);
+    alarmRinging = true;
   }
 }
 
@@ -156,3 +192,9 @@ function toggleLight() {
 document.querySelector("#darkness").style.opacity = 0;
 setTime();
 window.setInterval(setTime, 100);
+for (let i = 1; i < 60; i++) {
+  var option = document.createElement("option");
+  option.value = i < 10 ? '0' + i : i;
+  option.innerHTML = i < 10 ? '0' + i : i;
+  document.querySelector('#alarmMinute').appendChild(option);
+}
