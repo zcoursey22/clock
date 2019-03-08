@@ -1,5 +1,5 @@
 # JS Clock
-A realtime digital clock
+A realtime digital clock in js
 
 ## Instructions
 1. Link the js and css files to the html
